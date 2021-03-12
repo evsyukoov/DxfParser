@@ -70,7 +70,7 @@ std::string DXFParser::createStringToJavaProgram() {
 		result.append("}");
 		result.append("\n");
 	} else
-		result.append("blocks:false");
+		result.append("blocks:false\n");
 	if (!lines.empty()) {
 		result.append("plines:true{");
 		for (auto it = lines.begin(); it != lines.end(); it++) {
