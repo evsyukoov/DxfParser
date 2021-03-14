@@ -25,17 +25,17 @@ class DXFParser : public DL_CreationAdapter {
 public:
 	const std::list<DXFBlock*> &getBlocks() const;
 
-	void 	addPointName();
-
 public:
 
 	void addInsert(const DL_InsertData &data) override;
 
-	void addText(const DL_TextData &data) override;
-
 	void addVertex(const DL_VertexData &data) override;
 
 	std::string	createStringToJavaProgram();
+
+	void addAttribute(const DL_AttributeData &data) override;
+
+	bool isBlockAttribute(double xAttr, double yAttr);
 
 };
 

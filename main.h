@@ -5,10 +5,10 @@
 #ifndef DXFPARSER_MAIN_H
 #define DXFPARSER_MAIN_H
 
-#include "/usr/local/Cellar/dxflib/2.5.0.0-1/include/dxflib/dl_dxf.h"
-#include "/usr/local/Cellar/dxflib/2.5.0.0-1/include/dxflib/dl_creationinterface.h"
-#include "/usr/local/Cellar/dxflib/2.5.0.0-1/include/dxflib/dl_creationadapter.h"
-#include "/usr/local/Cellar/dxflib/2.5.0.0-1/include/dxflib/dl_attributes.h"
+#include "/Users/denis/Denis/DxfParser/dxflib-3.17.0-src/src/dl_dxf.h"
+#include "/Users/denis/Denis/DxfParser/dxflib-3.17.0-src/src/dl_creationinterface.h"
+#include "/Users/denis/Denis/DxfParser/dxflib-3.17.0-src/src/dl_creationadapter.h"
+#include "/Users/denis/Denis/DxfParser/dxflib-3.17.0-src/src/dl_attributes.h"
 #include "DXFParser.hpp"
 #include "DXFPline.hpp"
 #include <list>

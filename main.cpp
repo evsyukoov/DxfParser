@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
 		std::cout << "Error reading" << std::endl;
 		return (0);
 	}
-	parser->addPointName();
+	//parser->addPointName();
 	std::string toJAVA = parser->createStringToJavaProgram();
 	//если нет блоков и замкнутых полилиний
 	if (toJAVA.empty())

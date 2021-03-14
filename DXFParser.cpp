@@ -6,35 +6,26 @@
 
 void DXFParser::addInsert(const DL_InsertData &data) {
 	//невидимые блоки попадают в начало чертежа, убираем
-	if ((data.ipx <= 10 && data.ipx >= -10) || (data.ipy <= 10 && data.ipy >= -10))
+	if ((data.ipx <= 10 && data.ipx >= -10) && (data.ipy <= 10 && data.ipy >= -10))
 		return ;
-	//std::cout << "INSERT " << data.name << " " <<  data.ipx << " , " << data.ipy << std::endl;
 	block = new DXFBlock();
-	Point p(data.ipx, data.ipy);
+	Point p(data.ipx, data.ipy, data.ipz);
 	block->setBlockName(data.name);
 	block->setCoords(p);
 	blocks.push_back(block);
 }
 
-void DXFParser::addText(const DL_TextData &data) {
-	if ((data.ipx <= 10 && data.ipx >= -10) || (data.ipy <= 10 && data.ipy >= -10))
+void DXFParser::addAttribute(const DL_AttributeData &data) {
+	if ((data.ipx <= 10 && data.ipx >= -10) && (data.ipy <= 10 && data.ipy >= -10) || !block)
 		return ;
-	if (!data.text.empty() && data.text[0] != '\\')
-		block->addDescription(data.text);
+	if (data.text.empty())
+		return ;
+	if (isBlockAttribute(data.ipx, data.ipy))
+		block->setPointName(data.text);
 }
 
 const list<DXFBlock*> &DXFParser::getBlocks() const {
 	return blocks;
-}
-
-void DXFParser::addPointName() {
-	//будем считать что первое описание блока и есть его имя
-	std::list<std::string> blockDescr;
-	for(auto it = blocks.begin(); it != blocks.end(); it++)
-	{
-		blockDescr = (*it)->getDescription();
-		(*it)->setPointName(*blockDescr.begin());
-	}
 }
 
 void DXFParser::addVertex(const DL_VertexData &data) {
@@ -44,7 +35,7 @@ void DXFParser::addVertex(const DL_VertexData &data) {
 		polyline = new DXFPline();
 		polyline->setClosedLine(false);
 	}
-	Point point(data.x, data.y);
+	Point point(data.x, data.y, data.z);
 	if (!polyline->addVertex(point)) {
 		lines.push_back(polyline);
 		polyline->setClosedLine(true);
@@ -61,11 +52,12 @@ std::string DXFParser::createStringToJavaProgram() {
 		int i = 1;
 		for(auto it = blocks.begin(); it != blocks.end(); it++)
 		{
-			std::string name = (*it)->getPointName().empty() ? std::to_string(i++) : (*it)->getPointName();
-			result.append(name + "," + std::to_string((*it)->getCoords().x)
-			+ "," + std::to_string((*it)->getCoords().y));
+			if ((*it)->getPointName().empty())
+				(*it)->setPointName((*it)->getBlockName());
+			result.append((*it)->getPointName() + "," + std::to_string((*it)->getCoords().x)
+			+ "," + std::to_string((*it)->getCoords().y) + "," + std::to_string((*it)->getCoords().z));
 			if (it != --(blocks.end()))
-				result.append(";");
+				result += ";";
 		}
 		result.append("}");
 		result.append("\n");
@@ -78,7 +70,8 @@ std::string DXFParser::createStringToJavaProgram() {
 			int i = 1;
 			for (auto itt = line.begin(); itt != line.end(); itt++)
 			{
-				result.append(std::to_string(i++) + "," + std::to_string(itt->x) + "," + std::to_string(itt->y));
+				result.append(std::to_string(i++) + "," + std::to_string(itt->x) + "," + std::to_string(itt->y) +
+				+ "," + std::to_string(itt->z));
 				if (itt != --line.end())
 					result.append(";");
 			}
@@ -89,6 +82,10 @@ std::string DXFParser::createStringToJavaProgram() {
 	} else
 		result.append("plines:false");;
 	return result;
+}
+
+bool DXFParser::isBlockAttribute(double xAttr, double yAttr) {
+	return pow(xAttr - block->getCoords().x, 2) + pow(yAttr - block->getCoords().y, 2) < 9;
 }
 
 
