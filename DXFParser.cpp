@@ -16,11 +16,11 @@ void DXFParser::addInsert(const DL_InsertData &data) {
 }
 
 void DXFParser::addAttribute(const DL_AttributeData &data) {
-	if ((data.ipx <= 10 && data.ipx >= -10) && (data.ipy <= 10 && data.ipy >= -10) || !block)
+	if ((data.ipx <= 10 && data.ipx >= -10 && data.ipy <= 10 && data.ipy >= -10) || !block)
 		return ;
 	if (data.text.empty())
 		return ;
-	if (isBlockAttribute(data.ipx, data.ipy))
+	if (isBlockAttribute(data.ipx, data.ipy) && block->getPointName().empty())
 		block->setPointName(data.text);
 }
 
@@ -29,7 +29,7 @@ const list<DXFBlock*> &DXFParser::getBlocks() const {
 }
 
 void DXFParser::addVertex(const DL_VertexData &data) {
-	if ((data.x <= 100 && data.x >= -100) || (data.y <= 100 && data.y >= -100))
+	if ((data.x <= 100 && data.x >= -100) && (data.y <= 100 && data.y >= -100))
 		return;
 	if (!polyline || polyline->isClosedLine()) {
 		polyline = new DXFPline();

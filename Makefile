@@ -1,7 +1,7 @@
 NAME = converter
 
-CC = -std=c++11
-LIBPATH = /usr/local/Cellar/dxflib/2.5.0.0-1/lib
+CC = -std=c++0x
+LIBPATH = dxflib-3.17.0-src/src
 LIB = dxflib
 
 SRC = DXFBlock.cpp \
@@ -17,13 +17,13 @@ all: $(NAME)
 $(NAME): $(OBJS)
 
 $(NAME):
-	  clang++ $(SRC) -L$(LIBPATH) $(CC) -l$(LIB)  -o $(NAME)
+	  g++ $(SRC) -L$(LIBPATH) $(CC) -l$(LIB)  -o $(NAME)
 
 clean:
 	rm -f $(OBJS)
 
 %.o: %.c
-	clang++ $(CC) -c $< -o $@
+	g++ $(CC) -c $< -o $@
 
 fclean: clean
 	rm -f $(NAME)
