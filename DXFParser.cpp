@@ -5,8 +5,9 @@
 #include "DXFParser.hpp"
 
 void DXFParser::addInsert(const DL_InsertData &data) {
+	std::cout << "block: " << data.ipx << " , " << data.ipy << std::endl;
 	//невидимые блоки попадают в начало чертежа, убираем
-	if ((data.ipx <= 100 && data.ipx >= -100) && (data.ipy <= 100 && data.ipy >= -100))
+	if ((data.ipx <= 1000 && data.ipx >= -1000) && (data.ipy <= 1000 && data.ipy >= -1000))
 		return ;
 	block = new DXFBlock();
 	Point p(data.ipx, data.ipy, data.ipz);
@@ -16,9 +17,9 @@ void DXFParser::addInsert(const DL_InsertData &data) {
 }
 
 void DXFParser::addAttribute(const DL_AttributeData &data) {
-	if ((data.ipx <= 100 && data.ipx >= -100 && data.ipy <= 100 && data.ipy >= -100) || !block || data.text.empty())
+	if ((data.ipx <= 1000 && data.ipx >= -1000 && data.ipy <= 1000 && data.ipy >= -1000) || !block || data.text.empty())
 		return ;
-	if (isBlockAttribute(data.ipx, data.ipy) && block->getPointName().empty())
+	if (block->getPointName().empty())
 		block->setPointName(data.text);
 }
 

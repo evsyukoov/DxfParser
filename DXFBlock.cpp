@@ -12,9 +12,6 @@ void DXFBlock::setCoords(const Point &coords) {
 	DXFBlock::coords = coords;
 }
 
-void DXFBlock::setDescription(const std::list<std::string> &description) {
-	this->description = description;
-}
 
 const std::string &DXFBlock::getPointName() const {
 	return pointName;
@@ -37,9 +34,3 @@ void DXFBlock::setBlockName(const std::string &blockName) {
 const std::string &DXFBlock::getBlockName() const {
 	return blockName;
 }
-
-void DXFBlock::addDescription(const std::string &desr) {
-	description.push_back(desr);
-}
-
-
