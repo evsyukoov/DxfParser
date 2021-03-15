@@ -25,6 +25,8 @@ class DXFParser : public DL_CreationAdapter {
 public:
 	const std::list<DXFBlock*> &getBlocks() const;
 
+	DXFParser();
+
 public:
 
 	void addInsert(const DL_InsertData &data) override;
@@ -36,6 +38,9 @@ public:
 	void addAttribute(const DL_AttributeData &data) override;
 
 	bool isBlockAttribute(double xAttr, double yAttr);
+
+	void addPolyline(const DL_PolylineData &data) override;
+
 
 };
 

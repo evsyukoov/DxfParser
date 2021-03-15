@@ -6,7 +6,7 @@
 
 void DXFParser::addInsert(const DL_InsertData &data) {
 	//невидимые блоки попадают в начало чертежа, убираем
-	if ((data.ipx <= 10 && data.ipx >= -10) && (data.ipy <= 10 && data.ipy >= -10))
+	if ((data.ipx <= 100 && data.ipx >= -100) && (data.ipy <= 100 && data.ipy >= -100))
 		return ;
 	block = new DXFBlock();
 	Point p(data.ipx, data.ipy, data.ipz);
@@ -16,9 +16,7 @@ void DXFParser::addInsert(const DL_InsertData &data) {
 }
 
 void DXFParser::addAttribute(const DL_AttributeData &data) {
-	if ((data.ipx <= 10 && data.ipx >= -10 && data.ipy <= 10 && data.ipy >= -10) || !block)
-		return ;
-	if (data.text.empty())
+	if ((data.ipx <= 100 && data.ipx >= -100 && data.ipy <= 100 && data.ipy >= -100) || !block || data.text.empty())
 		return ;
 	if (isBlockAttribute(data.ipx, data.ipy) && block->getPointName().empty())
 		block->setPointName(data.text);
@@ -28,18 +26,17 @@ const list<DXFBlock*> &DXFParser::getBlocks() const {
 	return blocks;
 }
 
+void DXFParser::addPolyline(const DL_PolylineData &data) {
+	polyline = new DXFPline();
+	lines.push_back(polyline);
+}
+
+
 void DXFParser::addVertex(const DL_VertexData &data) {
 	if ((data.x <= 100 && data.x >= -100) && (data.y <= 100 && data.y >= -100))
 		return;
-	if (!polyline || polyline->isClosedLine()) {
-		polyline = new DXFPline();
-		polyline->setClosedLine(false);
-	}
 	Point point(data.x, data.y, data.z);
-	if (!polyline->addVertex(point)) {
-		lines.push_back(polyline);
-		polyline->setClosedLine(true);
-	}
+	polyline->addVertex(point);
 }
 
 std::string DXFParser::createStringToJavaProgram() {
@@ -59,14 +56,15 @@ std::string DXFParser::createStringToJavaProgram() {
 			if (it != --(blocks.end()))
 				result += ";";
 		}
-		result.append("}");
-		result.append("\n");
+		result.append("}\n");
 	} else
 		result.append("blocks:false\n");
 	if (!lines.empty()) {
 		result.append("plines:true{");
 		for (auto it = lines.begin(); it != lines.end(); it++) {
 			auto line = (*it)->getPolyline();
+			if (line.empty())
+				continue;
 			int i = 1;
 			for (auto itt = line.begin(); itt != line.end(); itt++)
 			{
@@ -87,6 +85,12 @@ std::string DXFParser::createStringToJavaProgram() {
 bool DXFParser::isBlockAttribute(double xAttr, double yAttr) {
 	return pow(xAttr - block->getCoords().x, 2) + pow(yAttr - block->getCoords().y, 2) < 9;
 }
+
+DXFParser::DXFParser() {
+	polyline = nullptr;
+	block = nullptr;
+}
+
 
 
 

@@ -4,23 +4,12 @@
 
 #include "DXFPline.hpp"
 
-bool 	DXFPline::addVertex(Point &point) {
-	if (!polyline.empty() && point.x == polyline.begin()->x && point.y == polyline.begin()->y)
-		return false;
+void 	DXFPline::addVertex(Point &point) {
 	polyline.push_back(point);
-	return true;
 }
 
 DXFPline::DXFPline() {
-	closedLine = true;
-}
-
-void DXFPline::setClosedLine(bool closedLine) {
-	this->closedLine = closedLine;
-}
-
-bool DXFPline::isClosedLine() const {
-	return closedLine;
+	closedLine = false;
 }
 
 const std::list<Point> &DXFPline::getPolyline() const {

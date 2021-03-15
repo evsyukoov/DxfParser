@@ -14,13 +14,9 @@ class DXFPline {
 
 public:
 
-	bool 	addVertex(Point &point);
+	void 	addVertex(Point &point);
 
 	DXFPline();
-
-	void setClosedLine(bool closedLine);
-
-	bool isClosedLine() const;
 
 	const std::list<Point> &getPolyline() const;
 };

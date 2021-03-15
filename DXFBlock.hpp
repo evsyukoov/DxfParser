@@ -31,10 +31,6 @@ public:
 
 	const std::list<std::string> &getDescription() const;
 
-	void setDescription(const std::list<std::string> &description);
-
-	void addDescription(const std::string & desr);
-
 };
 
 
