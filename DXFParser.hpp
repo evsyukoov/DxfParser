@@ -9,7 +9,7 @@
 #include "main.h"
 #include "DXFBlock.hpp"
 #include "DXFPline.hpp"
-
+#include <unistd.h>
 class DXFParser : public DL_CreationAdapter {
 
 	DXFBlock *block;
@@ -33,7 +33,7 @@ public:
 
 	void addVertex(const DL_VertexData &data) override;
 
-	std::string	createStringToJavaProgram();
+	void	 printToJavaChannel();
 
 	void addAttribute(const DL_AttributeData &data) override;
 
